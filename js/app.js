@@ -112,6 +112,34 @@ class WakeyApp {
         document.body.classList.remove("no-scroll");
       });
     }
+
+    // Auto-close mobile drawer when any link is tapped
+    if (mobileMenu) {
+      mobileMenu.querySelectorAll("a, button").forEach(link => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.remove("open");
+          document.body.classList.remove("no-scroll");
+        });
+      });
+    }
+
+    // Global Escape Key Listener for Modals
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        if (mobileMenu) mobileMenu.classList.remove("open");
+        const searchModal = document.getElementById("search-modal-overlay");
+        if (searchModal) searchModal.classList.remove("open");
+        const qvModal = document.getElementById("quickview-modal-overlay");
+        if (qvModal) qvModal.classList.remove("open");
+        const floatAi = document.getElementById("floating-ai-modal");
+        if (floatAi) floatAi.classList.remove("open");
+        if (window.wakeyCart) {
+          window.wakeyCart.closeDrawer();
+          window.wakeyCart.closeCheckoutModal();
+        }
+        document.body.classList.remove("no-scroll");
+      }
+    });
   }
 
   initSoundToggle() {
