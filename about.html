@@ -6,6 +6,19 @@
   <title>Wakey Owl — About Us | Vision, Mission & Nocturnal Alchemy</title>
   <meta name="description" content="Our vision of putting Indian high-elevation specialty coffee on the global haute couture luxury stage. Direct-trade planter sovereignty and nocturnal cryogenic roasting." />
 
+  <!-- Geographic & Local SEO Tags -->
+  <meta name="geo.region" content="IN-KA" />
+  <meta name="geo.placename" content="Bengaluru" />
+  <meta name="geo.position" content="12.9716;77.5946" />
+  <meta name="ICBM" content="12.9716, 77.5946" />
+
+  <!-- OpenGraph Meta -->
+  <meta property="og:title" content="About Wakey Owl | Vision & Nocturnal Roastery" />
+  <meta property="og:description" content="Putting Indian single-estates on the global haute couture luxury stage." />
+  <meta property="og:image" content="https://wakey-owl.vercel.app/assets/images/roastery_lab.jpg" />
+  <meta property="og:url" content="https://wakey-owl.vercel.app/about.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none'%3E%3Cpolygon points='32,2 60,16 60,48 32,62 4,48 4,16' stroke='%23D4AF37' stroke-width='2' fill='%230C0F17'/%3E%3Ccircle cx='24' cy='27' r='4' fill='%2300F0FF'/%3E%3Ccircle cx='40' cy='27' r='4' fill='%2300F0FF'/%3E%3Cpolygon points='32,32 29,38 35,38' fill='%23FF9E1B'/%3E%3C/svg%3E" />
 
@@ -13,6 +26,15 @@
   <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/animations.css" />
+
+  <!-- GA4 Tag -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WAKEYOWL26"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-WAKEYOWL26', { 'anonymize_ip': true });
+  </script>
 </head>
 <body>
 
@@ -46,14 +68,16 @@
             <li class="nav-link-item"><a href="shop.html">Collection</a></li>
             <li class="nav-link-item"><a href="heritage.html">Our Heritage</a></li>
             <li class="nav-link-item active"><a href="about.html">About & Vision</a></li>
+            <li class="nav-link-item"><a href="case-studies.html">Case Studies</a></li>
             <li class="nav-link-item"><a href="curations.html">Curations</a></li>
+            <li class="nav-link-item"><a href="faq.html">FAQs</a></li>
             <li class="nav-link-item"><a href="contact.html">Contact Us</a></li>
           </ul>
         </nav>
 
         <div class="nav-live-status">
           <span class="live-beacon-dot"></span>
-          <span>Bangalore Roastery Live</span>
+          <span>Bangalore Roastery Live • 24h Dispatch</span>
         </div>
 
         <div class="nav-actions-right">
@@ -98,7 +122,9 @@
         <li><a href="shop.html">The Collection</a></li>
         <li><a href="heritage.html">Our Heritage</a></li>
         <li><a href="about.html">About & Vision</a></li>
+        <li><a href="case-studies.html">Case Studies</a></li>
         <li><a href="curations.html">Imperial Curations</a></li>
+        <li><a href="faq.html">FAQs</a></li>
         <li><a href="contact.html">Contact Us</a></li>
       </ul>
       <div style="margin-top: auto; padding-top: 24px; border-top: 1px solid var(--border-glass);">
@@ -111,6 +137,13 @@
     <!-- MAIN ABOUT US & VISION CONTENT -->
     <main style="padding-top: calc(var(--nav-height) + 40px); padding-bottom: 100px;">
       <div class="container">
+
+        <!-- Breadcrumbs -->
+        <div class="luxury-breadcrumbs">
+          <a href="index.html">Home</a>
+          <span>/</span>
+          <span class="crumb-current">About Us, Vision & Mission</span>
+        </div>
 
         <!-- Page Header -->
         <div class="section-header">
@@ -183,7 +216,7 @@
             <div class="glass-panel" style="padding: 32px;">
               <h4 style="color: #FF3366; font-size: 1.2rem; margin-bottom: 10px;">4. Connoisseur Guarantee</h4>
               <p style="font-size: 0.88rem; line-height: 1.6; color: var(--text-secondary);">
-                If any roast does not awaken your sensory palate with complete harmony and zero harsh astringency, our master sommelier will personally replace your allocation.
+                If any roast does not awaken your sensory palate with complete harmony and zero harsh astringency, our master sommelier will personally replace your allocation within 24 hours.
               </p>
             </div>
 
@@ -232,7 +265,9 @@
               <li><a href="shop.html">The Collection</a></li>
               <li><a href="heritage.html">Our Heritage</a></li>
               <li><a href="about.html">About & Vision</a></li>
+              <li><a href="case-studies.html">Case Studies</a></li>
               <li><a href="curations.html">Imperial Curations</a></li>
+              <li><a href="faq.html">FAQs</a></li>
               <li><a href="contact.html">Contact Us</a></li>
             </ul>
           </div>
@@ -259,9 +294,7 @@
         <div class="footer-bottom-bar">
           <div>© 2026 Wakey Owl Luxury Roastery India Pvt. Ltd. All Rights Reserved.</div>
           <div class="footer-badges">
-            <span>Specialty Coffee Association India</span> • 
-            <span>100% Shade-Grown Western Ghats</span> • 
-            <span>Cryogenic Stasis Sealed</span>
+            <a href="privacy.html">Privacy Policy</a> • <a href="terms.html">Terms of Service</a>
           </div>
         </div>
       </div>

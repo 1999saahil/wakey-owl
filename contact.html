@@ -6,6 +6,19 @@
   <title>Wakey Owl — Contact & VIP Tasting Salons | Private Concierge</title>
   <meta name="description" content="Connect with the Wakey Owl private concierge for corporate gifting, private salon tastings in Bengaluru, Mumbai, and New Delhi, and estate inquiries." />
 
+  <!-- Geographic & Local SEO Tags -->
+  <meta name="geo.region" content="IN-KA" />
+  <meta name="geo.placename" content="Bengaluru" />
+  <meta name="geo.position" content="12.9716;77.5946" />
+  <meta name="ICBM" content="12.9716, 77.5946" />
+
+  <!-- OpenGraph & Social Sharing Meta -->
+  <meta property="og:title" content="Wakey Owl — Contact & VIP Tasting Salons" />
+  <meta property="og:description" content="Connect with our Master Sommelier concierge in Bengaluru, Mumbai, and New Delhi." />
+  <meta property="og:image" content="https://wakey-owl.vercel.app/assets/images/hero_canister.jpg" />
+  <meta property="og:url" content="https://wakey-owl.vercel.app/contact.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none'%3E%3Cpolygon points='32,2 60,16 60,48 32,62 4,48 4,16' stroke='%23D4AF37' stroke-width='2' fill='%230C0F17'/%3E%3Ccircle cx='24' cy='27' r='4' fill='%2300F0FF'/%3E%3Ccircle cx='40' cy='27' r='4' fill='%2300F0FF'/%3E%3Cpolygon points='32,32 29,38 35,38' fill='%23FF9E1B'/%3E%3C/svg%3E" />
 
@@ -13,6 +26,15 @@
   <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/animations.css" />
+
+  <!-- GA4 Tag -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WAKEYOWL26"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-WAKEYOWL26', { 'anonymize_ip': true });
+  </script>
 </head>
 <body>
 
@@ -46,14 +68,16 @@
             <li class="nav-link-item"><a href="shop.html">Collection</a></li>
             <li class="nav-link-item"><a href="heritage.html">Our Heritage</a></li>
             <li class="nav-link-item"><a href="about.html">About & Vision</a></li>
+            <li class="nav-link-item"><a href="case-studies.html">Case Studies</a></li>
             <li class="nav-link-item"><a href="curations.html">Curations</a></li>
+            <li class="nav-link-item"><a href="faq.html">FAQs</a></li>
             <li class="nav-link-item active"><a href="contact.html">Contact Us</a></li>
           </ul>
         </nav>
 
         <div class="nav-live-status">
           <span class="live-beacon-dot"></span>
-          <span>Bangalore Roastery Live</span>
+          <span>Bangalore Roastery Live • 24h Dispatch</span>
         </div>
 
         <div class="nav-actions-right">
@@ -98,7 +122,9 @@
         <li><a href="shop.html">The Collection</a></li>
         <li><a href="heritage.html">Our Heritage</a></li>
         <li><a href="about.html">About & Vision</a></li>
+        <li><a href="case-studies.html">Case Studies</a></li>
         <li><a href="curations.html">Imperial Curations</a></li>
+        <li><a href="faq.html">FAQs</a></li>
         <li><a href="contact.html">Contact Us</a></li>
       </ul>
       <div style="margin-top: auto; padding-top: 24px; border-top: 1px solid var(--border-glass);">
@@ -112,14 +138,21 @@
     <main style="padding-top: calc(var(--nav-height) + 40px); padding-bottom: 100px;">
       <div class="container">
 
+        <!-- Breadcrumbs -->
+        <div class="luxury-breadcrumbs">
+          <a href="index.html">Home</a>
+          <span>/</span>
+          <span class="crumb-current">Contact & VIP Tasting Salons</span>
+        </div>
+
         <!-- Page Header -->
         <div class="section-header">
-          <span class="section-eyebrow">Private Concierge & Salons</span>
+          <span class="section-eyebrow">Private Concierge & VIP Salons</span>
           <h1 style="font-size: clamp(2.4rem, 5vw, 4rem); margin-bottom: 16px;">
             Connect with <span class="text-gradient-gold">Wakey Owl</span>
           </h1>
           <p class="section-description">
-            Schedule a private sensory tasting session, consult on corporate gifting suites, or arrange bespoke estate batch allocations.
+            Schedule a private sensory tasting session, consult on corporate gifting suites, or arrange bespoke estate batch allocations. Response guaranteed within 4 hours.
           </p>
         </div>
 
@@ -129,7 +162,7 @@
           <div class="glass-panel" style="padding: 44px; border-color: rgba(212,175,55,0.35);">
             <h3 style="font-size: 1.5rem; margin-bottom: 8px;">Private Concierge Dispatch</h3>
             <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 24px;">
-              Our Master Sommelier team responds within 4 business hours.
+              Our Master Sommelier team in Bengaluru responds within 4 business hours.
             </p>
 
             <form id="contact-concierge-form" style="display: flex; flex-direction: column; gap: 16px;">
@@ -161,7 +194,7 @@
               </div>
 
               <div class="form-group">
-                <label style="display:block; font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Your Message / Requirements</label>
+                <label style="display:block; font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">Your Message / Palate Preferences</label>
                 <textarea class="input-field" rows="4" placeholder="Detail your palate preferences, event dates, or gifting volume..." style="resize:none;"></textarea>
               </div>
 
@@ -173,13 +206,18 @@
             <div id="contact-form-feedback" style="margin-top:16px;"></div>
           </div>
 
-          <!-- Right Column: VIP Tasting Salons & Roastery Coordinates -->
+          <!-- Right Column: VIP Tasting Salons & Roastery Coordinates + Maps -->
           <div>
-            <h3 style="font-size: 1.4rem; margin-bottom: 20px; color: var(--text-pure);">VIP Sensory Salons</h3>
+            <h3 style="font-size: 1.4rem; margin-bottom: 20px; color: var(--text-pure);">VIP Sensory Salons & Maps</h3>
 
             <!-- Salon 1: Bengaluru -->
             <div class="salon-location-card" data-tilt>
-              <div class="salon-city">Bengaluru Roastery & Sensory Lab</div>
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <div class="salon-city">Bengaluru Roastery & Sensory Lab</div>
+                <a href="https://maps.google.com/?q=Indiranagar+Bengaluru" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem; color:var(--biolum-cyan); display:flex; align-items:center; gap:4px;">
+                  <span>Directions ↗</span>
+                </a>
+              </div>
               <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 8px;">
                 100ft Road, Indiranagar & Sadashivanagar Crest<br />
                 Bengaluru, Karnataka 560038
@@ -191,7 +229,12 @@
 
             <!-- Salon 2: Mumbai -->
             <div class="salon-location-card" data-tilt>
-              <div class="salon-city">Mumbai Reserve Pavilion</div>
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <div class="salon-city">Mumbai Reserve Pavilion</div>
+                <a href="https://maps.google.com/?q=Bandra+Kurla+Complex+Mumbai" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem; color:var(--biolum-cyan); display:flex; align-items:center; gap:4px;">
+                  <span>Directions ↗</span>
+                </a>
+              </div>
               <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 8px;">
                 The Capital, G Block, Bandra Kurla Complex (BKC)<br />
                 Mumbai, Maharashtra 400051
@@ -203,7 +246,12 @@
 
             <!-- Salon 3: New Delhi -->
             <div class="salon-location-card" data-tilt>
-              <div class="salon-city">New Delhi Royal Tasting Salon</div>
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <div class="salon-city">New Delhi Royal Tasting Salon</div>
+                <a href="https://maps.google.com/?q=Chanakyapuri+New+Delhi" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem; color:var(--biolum-cyan); display:flex; align-items:center; gap:4px;">
+                  <span>Directions ↗</span>
+                </a>
+              </div>
               <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 8px;">
                 Chanakyapuri Diplomatic Enclave<br />
                 New Delhi 110021
@@ -257,7 +305,9 @@
               <li><a href="shop.html">The Collection</a></li>
               <li><a href="heritage.html">Our Heritage</a></li>
               <li><a href="about.html">About & Vision</a></li>
+              <li><a href="case-studies.html">Case Studies</a></li>
               <li><a href="curations.html">Imperial Curations</a></li>
+              <li><a href="faq.html">FAQs</a></li>
               <li><a href="contact.html">Contact Us</a></li>
             </ul>
           </div>
@@ -284,9 +334,7 @@
         <div class="footer-bottom-bar">
           <div>© 2026 Wakey Owl Luxury Roastery India Pvt. Ltd. All Rights Reserved.</div>
           <div class="footer-badges">
-            <span>Specialty Coffee Association India</span> • 
-            <span>100% Shade-Grown Western Ghats</span> • 
-            <span>Cryogenic Stasis Sealed</span>
+            <a href="privacy.html">Privacy Policy</a> • <a href="terms.html">Terms of Service</a>
           </div>
         </div>
       </div>
