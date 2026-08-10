@@ -140,10 +140,10 @@ class AIAssistantEngine {
           </div>
           <div class="floating-ai-footer">
             <div class="ai-quick-pills" id="floating-quick-chips">
-              <button class="chip-q" data-question="Tell me the 1670 Baba Budan origin story">1670 Baba Budan</button>
-              <button class="chip-q" data-question="How to brew South Indian Filter Kaapi in brass Davarah?">Filter Kaapi Recipe</button>
-              <button class="chip-q" data-question="What food should I pair with Dark Roast?">Food Pairings</button>
-              <button class="chip-q" data-question="Why is Indian shade-grown coffee unique?">Shade-Grown Ecology</button>
+              <button type="button" class="chip-q" data-question="Tell me the 1670 Baba Budan origin story">1670 Baba Budan</button>
+              <button type="button" class="chip-q" data-question="How to brew South Indian Filter Kaapi in brass Davarah?">Filter Kaapi Recipe</button>
+              <button type="button" class="chip-q" data-question="What food should I pair with Dark Roast?">Food Pairings</button>
+              <button type="button" class="chip-q" data-question="Why is Indian shade-grown coffee unique?">Shade-Grown Ecology</button>
             </div>
             <form id="floating-ai-form" class="floating-ai-input-wrap">
               <input type="text" id="floating-ai-input" placeholder="Ask anything about origins, brewing, pairings..." />
@@ -183,7 +183,8 @@ class AIAssistantEngine {
 
     // Bind Quick Chips
     document.querySelectorAll(".chip-q").forEach(chip => {
-      chip.addEventListener("click", () => {
+      chip.addEventListener("click", (e) => {
+        e.preventDefault();
         const q = chip.getAttribute("data-question");
         const msgs = document.getElementById("floating-chat-messages");
         if (msgs) {
@@ -192,20 +193,38 @@ class AIAssistantEngine {
       });
     });
 
-    // Bind Form
-    const form = document.getElementById("floating-ai-form");
-    const input = document.getElementById("floating-ai-input");
-    if (form && input) {
-      form.addEventListener("submit", (e) => {
+    // Global document-level form submission interceptor for floating & embedded AI forms
+    document.addEventListener("submit", (e) => {
+      const floatForm = e.target.closest("#floating-ai-form");
+      if (floatForm) {
         e.preventDefault();
-        const text = input.value.trim();
-        if (text) {
-          const msgs = document.getElementById("floating-chat-messages");
-          this.handleUserQuery(text, msgs);
-          input.value = "";
+        e.stopPropagation();
+        const floatInput = document.getElementById("floating-ai-input");
+        if (floatInput) {
+          const text = floatInput.value.trim();
+          if (text) {
+            const msgs = document.getElementById("floating-chat-messages");
+            this.handleUserQuery(text, msgs);
+            floatInput.value = "";
+          }
         }
-      });
-    }
+      }
+
+      const embedForm = e.target.closest("#embedded-ai-form");
+      if (embedForm) {
+        e.preventDefault();
+        e.stopPropagation();
+        const embedInput = document.getElementById("embedded-ai-input");
+        const thread = document.getElementById("embedded-ai-thread");
+        if (embedInput && thread) {
+          const text = embedInput.value.trim();
+          if (text) {
+            this.handleUserQuery(text, thread);
+            embedInput.value = "";
+          }
+        }
+      }
+    });
   }
 
   renderChatInterface(container) {

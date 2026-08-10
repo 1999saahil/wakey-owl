@@ -27,23 +27,57 @@ class WakeyApp {
     this.initMobileMenu();
     this.initSmoothLinks();
     this.initContactForm();
+    this.initNewsletter();
   }
 
+  // Handle Contact Form with full preventDefault and visual feedback
   initContactForm() {
-    const form = document.getElementById("contact-concierge-form");
-    const feedback = document.getElementById("contact-form-feedback");
-    if (form && feedback) {
-      form.addEventListener("submit", (e) => {
+    document.addEventListener("submit", (e) => {
+      const form = e.target.closest("#contact-concierge-form");
+      if (form) {
         e.preventDefault();
-        feedback.innerHTML = `
-          <div class="whitelist-success-pill animate-fade-in" style="background:rgba(212,175,55,0.15); border-color:#D4AF37; color:#D4AF37; padding:12px 18px; border-radius:12px; font-size:0.9rem; font-weight:600;">
-            ✦ Private Concierge Dispatch Confirmed. Your Master Sommelier token #WO-VIP-778 has been transmitted to our Bangalore Roastery.
-          </div>
-        `;
+        e.stopPropagation();
+
+        const feedback = document.getElementById("contact-form-feedback");
+        if (feedback) {
+          feedback.innerHTML = `
+            <div class="whitelist-success-pill animate-fade-in" style="background:rgba(212,175,55,0.15); border:1px solid #D4AF37; color:#D4AF37; padding:16px 20px; border-radius:14px; font-size:0.92rem; font-weight:600; line-height:1.5;">
+              ✦ <strong>Private Concierge Dispatch Confirmed</strong><br />
+              Your Master Sommelier VIP Token <strong>#WO-VIP-778</strong> has been logged at our Bangalore Roastery. Our team will contact you within 4 business hours.
+            </div>
+          `;
+        }
         if (window.wakeyAudio) window.wakeyAudio.playSuccess();
+        if (window.wakeyCart) window.wakeyCart.showToast("Concierge Request Transmitted Successfully!");
         form.reset();
-      });
-    }
+      }
+    });
+  }
+
+  // Handle Royal Society Newsletter Form with full preventDefault
+  initNewsletter() {
+    document.addEventListener("submit", (e) => {
+      const form = e.target.closest("#newsletter-form");
+      if (form) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const input = form.querySelector("input[type='email']");
+        const msg = document.getElementById("newsletter-msg");
+        if (input && input.value) {
+          if (msg) {
+            msg.innerHTML = `
+              <div class="animate-fade-in" style="padding:10px 16px; background:rgba(212,175,55,0.12); border:1px solid #D4AF37; border-radius:10px; color:#D4AF37; font-size:0.92rem; font-weight:600;">
+                ✦ Welcome to the Royal Society. Use privilege code <strong>ROYAL15</strong> at checkout for 15% off.
+              </div>
+            `;
+          }
+          if (window.wakeyAudio) window.wakeyAudio.playSuccess();
+          if (window.wakeyCart) window.wakeyCart.showToast("15% Royal Privilege Code ROYAL15 Unlocked!");
+          form.reset();
+        }
+      }
+    });
   }
 
   initNavbar() {
@@ -190,11 +224,11 @@ class WakeyApp {
       container.innerHTML = `
         <div class="search-quick-tags">
           <span>Popular Searches:</span>
-          <button class="search-tag-chip" data-search-term="Attikan">Attikan Estate</button>
-          <button class="search-tag-chip" data-search-term="Ratnagiri">Ratnagiri Mango</button>
-          <button class="search-tag-chip" data-search-term="Filter">South Indian Filter</button>
-          <button class="search-tag-chip" data-search-term="Araku">Araku Valley</button>
-          <button class="search-tag-chip" data-search-term="Malabar">Monsooned Malabar</button>
+          <button type="button" class="search-tag-chip" data-search-term="Attikan">Attikan Estate</button>
+          <button type="button" class="search-tag-chip" data-search-term="Ratnagiri">Ratnagiri Mango</button>
+          <button type="button" class="search-tag-chip" data-search-term="Filter">South Indian Filter</button>
+          <button type="button" class="search-tag-chip" data-search-term="Araku">Araku Valley</button>
+          <button type="button" class="search-tag-chip" data-search-term="Malabar">Monsooned Malabar</button>
         </div>
       `;
 

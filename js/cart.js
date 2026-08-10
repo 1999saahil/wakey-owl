@@ -1,44 +1,46 @@
 /**
- * Wakey Owl — Royal Cart & Checkout Engine (Indian Luxury Edition)
- * Handles INR pricing, GST invoice toggle, luxury gifting messages, pincode check, and UPI/Card checkout.
+ * Wakey Owl — Luxury Royal Cart Engine (Indian Currency, PIN Code & GST Integration)
  */
 
-class CartEngine {
+class WakeyCart {
   constructor() {
-    this.items = [];
+    this.storageKey = "wakey_owl_royal_cart";
+    this.items = this.loadCart();
+    this.activeDiscountCode = null;
     this.discountPercent = 0;
-    this.flatDiscountINR = 0;
-    this.freeShippingPromo = false;
-    this.freeShippingThresholdINR = 1500.00;
-    this.appliedPromoCode = null;
-    this.isGiftBox = false;
+    this.discountFlatINR = 0;
+    this.pincodeValid = null;
+    this.isHeirloomGift = false;
+    this.giftBoxCostINR = 250;
+    this.freeShippingThresholdINR = 1500;
+    this.baseShippingINR = 150;
 
     this.init();
   }
 
   init() {
-    this.loadFromStorage();
-    this.injectCartDrawer();
+    this.injectDrawer();
     this.injectCheckoutModal();
-    this.updateUI();
     this.bindEvents();
+    this.updateUI();
   }
 
-  loadFromStorage() {
+  loadCart() {
     try {
-      const saved = localStorage.getItem("wakey_cart_items_inr");
-      if (saved) {
-        this.items = JSON.parse(saved);
-      }
+      const data = localStorage.getItem(this.storageKey);
+      return data ? JSON.parse(data) : [];
     } catch (e) {
-      this.items = [];
+      console.warn("Could not load cart from localStorage", e);
+      return [];
     }
   }
 
-  saveToStorage() {
+  saveCart() {
     try {
-      localStorage.setItem("wakey_cart_items_inr", JSON.stringify(this.items));
-    } catch (e) {}
+      localStorage.setItem(this.storageKey, JSON.stringify(this.items));
+    } catch (e) {
+      console.warn("Could not save cart to localStorage", e);
+    }
   }
 
   addItem(productId, quantity = 1, grind = "whole-bean", size = "250g") {
@@ -49,9 +51,6 @@ class CartEngine {
       item => item.id === productId && item.grind === grind && item.size === size
     );
 
-    const sizeObj = BAG_SIZES.find(s => s.id === size) || BAG_SIZES[0];
-    const basePriceINR = product.priceINR * sizeObj.multiplier;
-
     if (existingIndex > -1) {
       this.items[existingIndex].quantity += quantity;
     } else {
@@ -59,184 +58,190 @@ class CartEngine {
         id: product.id,
         name: product.name,
         subtitle: product.subtitle,
+        estate: product.estate,
+        altitude: product.altitude,
+        priceINR: product.priceINR,
         image: product.image,
-        unitPriceINR: basePriceINR,
-        quantity: quantity,
+        accentColor: product.accentColor,
         grind: grind,
         size: size,
-        accentColor: product.accentColor
+        quantity: quantity
       });
     }
 
-    this.saveToStorage();
+    this.saveCart();
     this.updateUI();
-    this.showToast(`Added "${product.name}" to your Royal Bag.`);
     if (window.wakeyAudio) window.wakeyAudio.playSuccess();
-  }
-
-  updateQuantity(index, newQty) {
-    if (index < 0 || index >= this.items.length) return;
-    if (newQty <= 0) {
-      this.removeItem(index);
-    } else {
-      this.items[index].quantity = newQty;
-      this.saveToStorage();
-      this.updateUI();
-    }
+    this.showToast(`✦ Added ${product.name} (${size}) to Royal Bag`);
   }
 
   removeItem(index) {
-    if (index < 0 || index >= this.items.length) return;
-    const removed = this.items.splice(index, 1)[0];
-    this.saveToStorage();
-    this.updateUI();
-    this.showToast(`Removed "${removed.name}" from your bag.`);
-    if (window.wakeyAudio) window.wakeyAudio.playClick();
+    if (index >= 0 && index < this.items.length) {
+      const removed = this.items.splice(index, 1);
+      this.saveCart();
+      this.updateUI();
+      if (window.wakeyAudio) window.wakeyAudio.playClick();
+      if (removed[0]) {
+        this.showToast(`Removed ${removed[0].name} from bag`);
+      }
+    }
+  }
+
+  updateQuantity(index, newQty) {
+    if (index >= 0 && index < this.items.length) {
+      if (newQty <= 0) {
+        this.removeItem(index);
+      } else {
+        this.items[index].quantity = newQty;
+        this.saveCart();
+        this.updateUI();
+      }
+    }
   }
 
   clearCart() {
     this.items = [];
-    this.appliedPromoCode = null;
+    this.activeDiscountCode = null;
     this.discountPercent = 0;
-    this.flatDiscountINR = 0;
-    this.freeShippingPromo = false;
-    this.isGiftBox = false;
-    this.saveToStorage();
+    this.discountFlatINR = 0;
+    this.saveCart();
     this.updateUI();
   }
 
-  applyPromo(code) {
-    const clean = code.trim().toUpperCase();
-    if (clean === "WAKEY10") {
-      this.discountPercent = 0.10;
-      this.appliedPromoCode = "WAKEY10 (10% Off)";
-      this.showToast("10% Connoisseur Privilege Applied!");
-      if (window.wakeyAudio) window.wakeyAudio.playSuccess();
-      this.updateUI();
-      return true;
-    } else if (clean === "ROYAL15") {
-      this.discountPercent = 0.15;
-      this.appliedPromoCode = "ROYAL15 (15% Royal Society Off)";
-      this.showToast("15% Royal Estate Discount Applied!");
-      if (window.wakeyAudio) window.wakeyAudio.playSuccess();
-      this.updateUI();
-      return true;
-    } else if (clean === "IMPERIAL") {
-      this.flatDiscountINR = 200.00;
-      this.appliedPromoCode = "IMPERIAL (₹200 Off)";
-      this.showToast("₹200 Imperial Welcome Perk Applied!");
-      if (window.wakeyAudio) window.wakeyAudio.playSuccess();
-      this.updateUI();
-      return true;
-    } else {
-      this.showToast("Invalid code. Try 'ROYAL15' or 'WAKEY10'", true);
-      return false;
-    }
-  }
-
-  getSubtotalINR() {
-    return this.items.reduce((sum, item) => sum + (item.unitPriceINR * item.quantity), 0);
-  }
-
   getTotalCount() {
-    return this.items.reduce((sum, item) => sum + item.quantity, 0);
+    return this.items.reduce((total, item) => total + item.quantity, 0);
   }
 
   getCalculations() {
-    const subtotalINR = this.getSubtotalINR();
-    const percentDiscount = subtotalINR * this.discountPercent;
-    const totalDiscount = percentDiscount + this.flatDiscountINR;
-    const discountedSubtotalINR = Math.max(0, subtotalINR - totalDiscount);
+    let subtotalINR = 0;
 
-    const isFreeShipping = this.freeShippingPromo || (discountedSubtotalINR >= this.freeShippingThresholdINR);
-    const shippingINR = (subtotalINR === 0 || isFreeShipping) ? 0 : 150.00;
-    const giftBoxFeeINR = this.isGiftBox ? 250.00 : 0;
-    const totalINR = discountedSubtotalINR + shippingINR + giftBoxFeeINR;
+    this.items.forEach(item => {
+      const sizeObj = (typeof BAG_SIZES !== "undefined")
+        ? (BAG_SIZES.find(s => s.id === item.size) || { multiplier: 1.0 })
+        : { multiplier: 1.0 };
+      const itemBase = item.priceINR * sizeObj.multiplier;
+      subtotalINR += itemBase * item.quantity;
+    });
 
-    const remainingForFreeShipINR = Math.max(0, this.freeShippingThresholdINR - discountedSubtotalINR);
-    const freeShipProgress = Math.min(100, (discountedSubtotalINR / this.freeShippingThresholdINR) * 100);
+    let discountINR = 0;
+    if (this.discountPercent > 0) {
+      discountINR += (subtotalINR * this.discountPercent) / 100;
+    }
+    if (this.discountFlatINR > 0) {
+      discountINR += this.discountFlatINR;
+    }
+    if (discountINR > subtotalINR) discountINR = subtotalINR;
+
+    const isFreeShipping = subtotalINR >= this.freeShippingThresholdINR || subtotalINR === 0;
+    const shippingINR = isFreeShipping ? 0 : this.baseShippingINR;
+    const giftCost = this.isHeirloomGift ? this.giftBoxCostINR : 0;
+    const totalINR = Math.max(0, subtotalINR - discountINR + shippingINR + giftCost);
 
     return {
       subtotalINR,
-      totalDiscount,
-      discountedSubtotalINR,
+      discountINR,
       shippingINR,
+      giftCost,
       isFreeShipping,
-      giftBoxFeeINR,
-      remainingForFreeShipINR,
-      freeShipProgress,
+      amountToFreeShipping: Math.max(0, this.freeShippingThresholdINR - subtotalINR),
       totalINR
     };
   }
 
-  formatINR(val) {
-    return `₹${val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  formatPrice(amountInINR) {
+    if (window.wakeyApp && typeof window.wakeyApp.formatPrice === "function") {
+      return window.wakeyApp.formatPrice(amountInINR);
+    }
+    return `₹${amountInINR.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }
 
-  injectCartDrawer() {
-    if (document.getElementById("cart-drawer-overlay")) return;
+  injectDrawer() {
+    if (document.getElementById("cart-drawer")) return;
 
     const drawerHTML = `
-      <div id="cart-drawer-overlay" class="cart-drawer-overlay"></div>
-      <div id="cart-drawer" class="cart-drawer">
-        <div class="cart-drawer-header">
-          <div class="cart-header-title">
-            <span class="cart-owl-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="9" cy="10" r="2" fill="#D4AF37"/><circle cx="15" cy="10" r="2" fill="#D4AF37"/><path d="M12 14l-2 3h4z"/></svg>
-            </span>
-            <h3>Royal Sensory Bag</h3>
-            <span class="cart-header-count" id="drawer-item-count">(0)</span>
+      <div id="cart-drawer-overlay" class="drawer-overlay"></div>
+      <div id="cart-drawer" class="cart-drawer-panel">
+        <div class="drawer-header">
+          <div class="drawer-title-wrap">
+            <span class="drawer-gold-crest">✦</span>
+            <h3>Your Royal Bag <span id="drawer-item-count">(0)</span></h3>
           </div>
-          <button type="button" class="btn-close-drawer" id="cart-drawer-close" aria-label="Close Bag">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          <button type="button" class="btn-modal-close" id="btn-close-cart" aria-label="Close Bag">✕</button>
+        </div>
+
+        <!-- Free Royal Courier Meter -->
+        <div class="shipping-meter-container" id="shipping-meter-box">
+          <div class="shipping-meter-label" id="shipping-meter-text">
+            Complimentary Royal Air Courier on orders above ₹1,500
+          </div>
+          <div class="shipping-meter-bar">
+            <div class="shipping-meter-progress" id="shipping-meter-fill"></div>
+          </div>
+        </div>
+
+        <!-- Cart Items List -->
+        <div class="drawer-items-list" id="drawer-items-container">
+          <!-- Dynamically Injected -->
+        </div>
+
+        <!-- Pincode Checker & Gift Box -->
+        <div class="drawer-addon-section">
+          <!-- PIN Code Check -->
+          <div class="pincode-check-wrap">
+            <input type="text" id="cart-pincode-input" placeholder="Enter 6-Digit Delivery PIN (e.g. 560001)" maxlength="6" />
+            <button type="button" id="btn-check-pincode" class="btn btn-glass btn-small">Verify PIN</button>
+          </div>
+          <div id="pincode-status-msg" class="pincode-msg"></div>
+
+          <!-- Heirloom Gift Box Option -->
+          <div class="gift-addon-row">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.84rem;">
+              <input type="checkbox" id="cart-heirloom-gift-toggle" />
+              <span>Add Velvet-Lined Heirloom Gift Chest (+₹250)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Promo Code Input -->
+        <div class="drawer-promo-wrap">
+          <input type="text" id="promo-code-input" placeholder="Privilege Code (Try: ROYAL15 / IMPERIAL)" />
+          <button type="button" id="btn-apply-promo" class="btn btn-glass btn-small">Apply</button>
+        </div>
+        <div id="promo-code-feedback" class="promo-feedback-msg"></div>
+
+        <!-- Drawer Footer & Totals -->
+        <div class="drawer-footer">
+          <div class="drawer-totals-row">
+            <span>Subtotal</span>
+            <span id="drawer-subtotal-val">₹0.00</span>
+          </div>
+
+          <div class="drawer-totals-row discount-row" id="drawer-discount-row" style="display:none;">
+            <span>Royal Privilege Discount</span>
+            <span id="drawer-discount-val">-₹0.00</span>
+          </div>
+
+          <div class="drawer-totals-row" id="drawer-gift-row" style="display:none;">
+            <span>Heirloom Gift Presentation</span>
+            <span id="drawer-gift-val">+₹250.00</span>
+          </div>
+
+          <div class="drawer-totals-row">
+            <span>Royal Express Courier</span>
+            <span id="drawer-shipping-val">FREE</span>
+          </div>
+
+          <div class="drawer-totals-row final-total-row">
+            <span>Grand Allocation Total</span>
+            <span id="drawer-total-val" class="text-gradient-gold">₹0.00</span>
+          </div>
+
+          <button type="button" class="btn btn-glow-gold btn-block btn-large" id="btn-checkout-start">
+            <span>Proceed to Royal Dispatch</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
-        </div>
 
-        <!-- Free Delivery Progress Meter -->
-        <div class="cart-shipping-meter" id="cart-shipping-meter">
-          <div class="shipping-meter-text" id="shipping-meter-text">Add ₹1,500.00 for Complimentary Royal Courier</div>
-          <div class="shipping-meter-track">
-            <div class="shipping-meter-fill" id="shipping-meter-fill" style="width: 0%"></div>
-          </div>
-        </div>
-
-        <!-- Pincode Check Bar -->
-        <div style="padding: 12px 28px; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border-glass); display:flex; gap:8px; align-items:center;">
-          <input type="text" id="pincode-quick-check" placeholder="Enter Pincode (e.g. 560001)" maxlength="6" style="flex:1; background:rgba(0,0,0,0.4); border:1px solid var(--border-glass); border-radius:6px; padding:6px 10px; color:#FFF; font-size:0.82rem;" />
-          <button type="button" id="btn-check-pincode" class="btn btn-glass btn-small" style="padding:6px 12px; font-size:0.78rem;">Check</button>
-        </div>
-        <div id="pincode-status-msg" style="padding: 0 28px; font-size:0.78rem; color:#00F0FF; margin-top:4px;"></div>
-
-        <div class="cart-drawer-body" id="cart-drawer-items">
-          <!-- Populated by JS -->
-        </div>
-
-        <div class="cart-drawer-footer" id="cart-drawer-footer">
-          <!-- Luxury Gifting Option Toggle -->
-          <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; color:#D4AF37; margin-bottom:12px; cursor:pointer;">
-            <input type="checkbox" id="gift-box-toggle" style="accent-color:#D4AF37;" />
-            <span>Add Royal Heirloom Gift Packaging (+₹250)</span>
-          </label>
-
-          <div class="cart-promo-row">
-            <input type="text" id="cart-promo-input" class="cart-promo-input" placeholder="Privilege code (e.g. ROYAL15)" />
-            <button type="button" id="cart-promo-btn" class="btn btn-small btn-glass">Apply</button>
-          </div>
-          <div id="cart-applied-promo-tag" class="cart-applied-promo-tag"></div>
-
-          <div class="cart-summary-lines">
-            <div class="summary-line"><span>Subtotal</span><span id="drawer-subtotal">₹0.00</span></div>
-            <div class="summary-line discount-line" id="drawer-discount-row" style="display:none;"><span>Privilege Discount</span><span id="drawer-discount">-₹0.00</span></div>
-            <div class="summary-line" id="drawer-gift-row" style="display:none;"><span>Heirloom Gift Box</span><span>₹250.00</span></div>
-            <div class="summary-line"><span>Royal Express Courier</span><span id="drawer-shipping">₹150.00</span></div>
-            <div class="summary-line total-line"><span>Total Amount</span><span id="drawer-total">₹0.00</span></div>
-          </div>
-
-          <div class="cart-drawer-actions">
-            <button type="button" class="btn btn-glow-gold btn-block" id="btn-checkout-start">
-              <span>Proceed to Royal Dispatch</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-            </button>
+          <div style="text-align:center; margin-top:10px;">
             <a href="shop.html" class="link-continue-shopping" id="link-close-and-shop">Explore More Single-Estates</a>
           </div>
         </div>
@@ -358,192 +363,242 @@ class CartEngine {
         meterFill.style.width = "100%";
         meterFill.style.background = "linear-gradient(90deg, #D4AF37, #FF9E1B)";
       } else {
-        meterText.innerHTML = `Add <strong>${this.formatINR(calcs.remainingForFreeShipINR)}</strong> for Free Royal Courier`;
-        meterFill.style.width = `${calcs.freeShipProgress}%`;
-        meterFill.style.background = "linear-gradient(90deg, #FF9E1B, #D4AF37)";
+        const pct = Math.min(100, Math.round((calcs.subtotalINR / this.freeShippingThresholdINR) * 100));
+        meterText.innerHTML = `Add <strong>${this.formatPrice(calcs.amountToFreeShipping)}</strong> more for Complimentary Royal Courier`;
+        meterFill.style.width = `${pct}%`;
+        meterFill.style.background = "linear-gradient(90deg, #00F0FF, #D4AF37)";
       }
     }
 
-    // Drawer Items
-    const itemsContainer = document.getElementById("cart-drawer-items");
-    const footer = document.getElementById("cart-drawer-footer");
-    
+    // Render Items
+    const itemsContainer = document.getElementById("drawer-items-container");
     if (itemsContainer) {
       if (this.items.length === 0) {
         itemsContainer.innerHTML = `
-          <div class="cart-empty-state">
-            <div class="empty-owl-icon">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#6C738A" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 15h8M9 9h.01M15 9h.01"/></svg>
-            </div>
+          <div class="empty-cart-view">
+            <div class="empty-cart-icon">☕</div>
             <h4>Your Royal Bag is Empty</h4>
-            <p>Select from our high-elevation Indian single-estates to awaken your senses.</p>
-            <a href="shop.html" class="btn btn-glass btn-small" id="btn-empty-shop">Explore Estate Roasts</a>
+            <p>Explore our single-estate Indian harvest allocations.</p>
+            <a href="shop.html" class="btn btn-glow-gold btn-small" id="btn-empty-shop">Explore Estates</a>
           </div>
         `;
-        if (footer) footer.style.opacity = "0.4";
+        const shopBtn = itemsContainer.querySelector("#btn-empty-shop");
+        if (shopBtn) {
+          shopBtn.addEventListener("click", () => this.closeDrawer());
+        }
       } else {
-        if (footer) footer.style.opacity = "1";
         itemsContainer.innerHTML = this.items.map((item, idx) => {
-          const grindObj = GRIND_OPTIONS.find(g => g.id === item.grind);
-          const grindName = grindObj ? grindObj.label.split("—")[0] : item.grind;
+          const sizeObj = (typeof BAG_SIZES !== "undefined")
+            ? (BAG_SIZES.find(s => s.id === item.size) || { multiplier: 1.0, label: item.size })
+            : { multiplier: 1.0, label: item.size };
+          const grindObj = (typeof GRIND_OPTIONS !== "undefined")
+            ? (GRIND_OPTIONS.find(g => g.id === item.grind) || { label: item.grind })
+            : { label: item.grind };
+
+          const lineTotalINR = item.priceINR * sizeObj.multiplier * item.quantity;
 
           return `
-            <div class="cart-item-row animate-fade-in" data-index="${idx}">
-              <img src="${item.image}" alt="${item.name}" class="cart-item-img" />
-              <div class="cart-item-info">
+            <div class="cart-item-card" data-cart-index="${idx}">
+              <img src="${item.image}" alt="${item.name}" class="cart-item-thumb" />
+              <div class="cart-item-details">
                 <div class="cart-item-title-row">
-                  <h4 class="cart-item-title">${item.name}</h4>
-                  <button type="button" class="btn-remove-item" data-remove-idx="${idx}" aria-label="Remove item">✕</button>
+                  <h4>${item.name}</h4>
+                  <button type="button" class="btn-remove-item" data-remove-idx="${idx}" title="Remove">✕</button>
                 </div>
-                <div class="cart-item-meta">
-                  <span>${item.size}</span> • <span>${grindName}</span>
+                <div class="cart-item-variant">
+                  <span>${sizeObj.label || item.size}</span> • <span>${grindObj.label || item.grind}</span>
                 </div>
+                <div class="cart-item-estate">${item.altitude}</div>
+
                 <div class="cart-item-bottom-row">
-                  <div class="qty-control-pill">
-                    <button type="button" class="btn-qty" data-action="dec" data-idx="${idx}">-</button>
-                    <span class="qty-val">${item.quantity}</span>
-                    <button type="button" class="btn-qty" data-action="inc" data-idx="${idx}">+</button>
+                  <div class="cart-qty-ctrl">
+                    <button type="button" class="btn-qty-mini" data-qty-dec="${idx}">-</button>
+                    <span>${item.quantity}</span>
+                    <button type="button" class="btn-qty-mini" data-qty-inc="${idx}">+</button>
                   </div>
-                  <div class="cart-item-price">${this.formatINR(item.unitPriceINR * item.quantity)}</div>
+                  <div class="cart-item-price-val">${this.formatPrice(lineTotalINR)}</div>
                 </div>
               </div>
             </div>
           `;
         }).join("");
+
+        // Bind item controls
+        itemsContainer.querySelectorAll("[data-remove-idx]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const idx = parseInt(btn.getAttribute("data-remove-idx"));
+            this.removeItem(idx);
+          });
+        });
+
+        itemsContainer.querySelectorAll("[data-qty-dec]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const idx = parseInt(btn.getAttribute("data-qty-dec"));
+            this.updateQuantity(idx, this.items[idx].quantity - 1);
+          });
+        });
+
+        itemsContainer.querySelectorAll("[data-qty-inc]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const idx = parseInt(btn.getAttribute("data-qty-inc"));
+            this.updateQuantity(idx, this.items[idx].quantity + 1);
+          });
+        });
       }
     }
 
-    // Numbers
-    const subtotalEl = document.getElementById("drawer-subtotal");
-    const discountRow = document.getElementById("drawer-discount-row");
-    const discountEl = document.getElementById("drawer-discount");
-    const giftRow = document.getElementById("drawer-gift-row");
-    const shippingEl = document.getElementById("drawer-shipping");
-    const totalEl = document.getElementById("drawer-total");
+    // Update Totals
+    const subtotalEl = document.getElementById("drawer-subtotal-val");
+    if (subtotalEl) subtotalEl.textContent = this.formatPrice(calcs.subtotalINR);
 
-    if (subtotalEl) subtotalEl.textContent = this.formatINR(calcs.subtotalINR);
-    if (discountRow && discountEl) {
-      if (calcs.totalDiscount > 0) {
+    const discountRow = document.getElementById("drawer-discount-row");
+    const discountVal = document.getElementById("drawer-discount-val");
+    if (discountRow && discountVal) {
+      if (calcs.discountINR > 0) {
         discountRow.style.display = "flex";
-        discountEl.textContent = `-${this.formatINR(calcs.totalDiscount)}`;
+        discountVal.textContent = `-${this.formatPrice(calcs.discountINR)}`;
       } else {
         discountRow.style.display = "none";
       }
     }
-    if (giftRow) {
-      giftRow.style.display = this.isGiftBox ? "flex" : "none";
-    }
-    if (shippingEl) shippingEl.textContent = calcs.shippingINR === 0 ? "Complimentary" : this.formatINR(calcs.shippingINR);
-    if (totalEl) totalEl.textContent = this.formatINR(calcs.totalINR);
 
-    // Promo tag
-    const promoTag = document.getElementById("cart-applied-promo-tag");
-    if (promoTag) {
-      if (this.appliedPromoCode) {
-        promoTag.innerHTML = `<span>Applied: <strong>${this.appliedPromoCode}</strong></span> <button type="button" id="btn-remove-promo">✕</button>`;
+    const giftRow = document.getElementById("drawer-gift-row");
+    if (giftRow) {
+      giftRow.style.display = this.isHeirloomGift ? "flex" : "none";
+    }
+
+    const shippingEl = document.getElementById("drawer-shipping-val");
+    if (shippingEl) {
+      if (calcs.isFreeShipping) {
+        shippingEl.textContent = "COMPLIMENTARY";
+        shippingEl.style.color = "#00F0FF";
       } else {
-        promoTag.innerHTML = "";
+        shippingEl.textContent = this.formatPrice(calcs.shippingINR);
+        shippingEl.style.color = "var(--text-secondary)";
       }
     }
 
-    // Modal summary pill
-    const modalSummaryPill = document.getElementById("modal-checkout-summary-pill");
-    if (modalSummaryPill) {
-      modalSummaryPill.innerHTML = `
+    const totalEl = document.getElementById("drawer-total-val");
+    if (totalEl) totalEl.textContent = this.formatPrice(calcs.totalINR);
+
+    // Update Checkout Modal Pill
+    const modalPill = document.getElementById("modal-checkout-summary-pill");
+    if (modalPill) {
+      modalPill.innerHTML = `
         <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-          <span>Items (${count})</span>
-          <strong>${this.formatINR(calcs.discountedSubtotalINR)}</strong>
+          <span>Allocations (${count} Items):</span>
+          <span>${this.formatPrice(calcs.subtotalINR)}</span>
         </div>
+        ${calcs.discountINR > 0 ? `
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#D4AF37;">
+            <span>Privilege Discount:</span>
+            <span>-${this.formatPrice(calcs.discountINR)}</span>
+          </div>
+        ` : ''}
         <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-          <span>Express Royal Courier</span>
-          <span>${calcs.shippingINR === 0 ? "FREE" : this.formatINR(calcs.shippingINR)}</span>
+          <span>Courier Dispatch:</span>
+          <span>${calcs.isFreeShipping ? 'FREE' : this.formatPrice(calcs.shippingINR)}</span>
         </div>
-        ${this.isGiftBox ? `<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Heirloom Gift Box</span><span>₹250.00</span></div>` : ""}
-        <div style="display:flex; justify-content:space-between; font-size:1.15rem; color:#D4AF37; font-weight:700; border-top:1px solid rgba(255,255,255,0.1); padding-top:8px; margin-top:8px;">
-          <span>Total Authorized</span>
-          <span>${this.formatINR(calcs.totalINR)}</span>
+        <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1.1rem; color:#FFF; border-top:1px solid rgba(255,255,255,0.1); padding-top:6px; margin-top:6px;">
+          <span>Total Authorized:</span>
+          <span style="color:#D4AF37;">${this.formatPrice(calcs.totalINR)}</span>
         </div>
       `;
     }
   }
 
   bindEvents() {
-    document.addEventListener("click", (e) => {
-      const openBtn = e.target.closest("[data-cart-open]");
-      if (openBtn) {
+    // Open cart drawer triggers
+    document.querySelectorAll("[data-cart-open]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
         e.preventDefault();
         this.openDrawer();
-      }
-
-      const closeBtn = e.target.closest("#cart-drawer-close, #cart-drawer-overlay, #link-close-and-shop");
-      if (closeBtn) {
-        e.preventDefault();
-        this.closeDrawer();
-      }
-
-      const qtyBtn = e.target.closest(".btn-qty");
-      if (qtyBtn) {
-        const idx = parseInt(qtyBtn.getAttribute("data-idx"));
-        const action = qtyBtn.getAttribute("data-action");
-        if (action === "inc") this.updateQuantity(idx, this.items[idx].quantity + 1);
-        if (action === "dec") this.updateQuantity(idx, this.items[idx].quantity - 1);
-      }
-
-      const removeBtn = e.target.closest(".btn-remove-item");
-      if (removeBtn) {
-        const idx = parseInt(removeBtn.getAttribute("data-remove-idx"));
-        this.removeItem(idx);
-      }
-
-      const removePromoBtn = e.target.closest("#btn-remove-promo");
-      if (removePromoBtn) {
-        this.appliedPromoCode = null;
-        this.discountPercent = 0;
-        this.flatDiscountINR = 0;
-        this.updateUI();
-        this.showToast("Privilege code removed.");
-      }
-
-      const checkoutStart = e.target.closest("#btn-checkout-start");
-      if (checkoutStart) {
-        if (this.items.length === 0) {
-          this.showToast("Your bag is empty! Add an estate roast first.", true);
-        } else {
-          this.closeDrawer();
-          this.openCheckoutModal();
-        }
-      }
-
-      const modalClose = e.target.closest("#checkout-modal-close, #checkout-modal-overlay");
-      if (modalClose && !e.target.closest(".checkout-modal-card")) {
-        this.closeCheckoutModal();
-      }
+      });
     });
 
-    // Promo code apply
-    const promoBtn = document.getElementById("cart-promo-btn");
-    const promoInput = document.getElementById("cart-promo-input");
+    // Close drawer
+    const closeBtn = document.getElementById("btn-close-cart");
+    const overlay = document.getElementById("cart-drawer-overlay");
+    const linkShop = document.getElementById("link-close-and-shop");
+
+    if (closeBtn) closeBtn.addEventListener("click", () => this.closeDrawer());
+    if (overlay) overlay.addEventListener("click", () => this.closeDrawer());
+    if (linkShop) linkShop.addEventListener("click", () => this.closeDrawer());
+
+    // Promo Code
+    const promoBtn = document.getElementById("btn-apply-promo");
+    const promoInput = document.getElementById("promo-code-input");
+    const promoFeedback = document.getElementById("promo-code-feedback");
+
     if (promoBtn && promoInput) {
       promoBtn.addEventListener("click", () => {
-        if (promoInput.value) {
-          this.applyPromo(promoInput.value);
-          promoInput.value = "";
+        const code = promoInput.value.trim().toUpperCase();
+        if (code === "ROYAL15") {
+          this.activeDiscountCode = "ROYAL15";
+          this.discountPercent = 15;
+          this.discountFlatINR = 0;
+          promoFeedback.textContent = "✦ 15% Royal Privilege Code Applied!";
+          promoFeedback.style.color = "#D4AF37";
+          if (window.wakeyAudio) window.wakeyAudio.playSuccess();
+        } else if (code === "WAKEY10") {
+          this.activeDiscountCode = "WAKEY10";
+          this.discountPercent = 10;
+          this.discountFlatINR = 0;
+          promoFeedback.textContent = "✦ 10% Connoisseur Privilege Applied!";
+          promoFeedback.style.color = "#D4AF37";
+          if (window.wakeyAudio) window.wakeyAudio.playSuccess();
+        } else if (code === "IMPERIAL") {
+          this.activeDiscountCode = "IMPERIAL";
+          this.discountPercent = 0;
+          this.discountFlatINR = 200;
+          promoFeedback.textContent = "✦ ₹200 Imperial Privilege Applied!";
+          promoFeedback.style.color = "#00F0FF";
+          if (window.wakeyAudio) window.wakeyAudio.playSuccess();
+        } else {
+          promoFeedback.textContent = "Invalid or expired privilege key.";
+          promoFeedback.style.color = "#FF3366";
+          if (window.wakeyAudio) window.wakeyAudio.playClick();
         }
-      });
-    }
-
-    // Gift box toggle
-    const giftBoxToggle = document.getElementById("gift-box-toggle");
-    if (giftBoxToggle) {
-      giftBoxToggle.addEventListener("change", (e) => {
-        this.isGiftBox = e.target.checked;
         this.updateUI();
       });
     }
 
-    // Pincode check
+    // Gift Box Toggle
+    const giftToggle = document.getElementById("cart-heirloom-gift-toggle");
+    if (giftToggle) {
+      giftToggle.addEventListener("change", (e) => {
+        this.isHeirloomGift = e.target.checked;
+        this.updateUI();
+        if (window.wakeyAudio) window.wakeyAudio.playClick();
+      });
+    }
+
+    // Checkout Flow Start
+    const checkoutStartBtn = document.getElementById("btn-checkout-start");
+    if (checkoutStartBtn) {
+      checkoutStartBtn.addEventListener("click", () => {
+        if (this.items.length === 0) {
+          this.showToast("Your royal bag is empty. Explore our single-estates first.");
+          return;
+        }
+        this.closeDrawer();
+        this.openCheckoutModal();
+      });
+    }
+
+    // Checkout Modal Close
+    const modalCloseBtn = document.getElementById("checkout-modal-close");
+    const modalOverlay = document.getElementById("checkout-modal-overlay");
+    if (modalCloseBtn) modalCloseBtn.addEventListener("click", () => this.closeCheckoutModal());
+    if (modalOverlay) {
+      modalOverlay.addEventListener("click", (e) => {
+        if (e.target === modalOverlay) this.closeCheckoutModal();
+      });
+    }
+
+    // PIN Code Checker
     const pinBtn = document.getElementById("btn-check-pincode");
-    const pinInput = document.getElementById("pincode-quick-check");
+    const pinInput = document.getElementById("cart-pincode-input");
     const pinMsg = document.getElementById("pincode-status-msg");
     if (pinBtn && pinInput && pinMsg) {
       pinBtn.addEventListener("click", () => {
@@ -573,14 +628,15 @@ class CartEngine {
       });
     }
 
-    // Checkout Submit
-    const checkoutForm = document.getElementById("checkout-form");
-    if (checkoutForm) {
-      checkoutForm.addEventListener("submit", (e) => {
+    // Checkout Submit with Document-Level Delegation
+    document.addEventListener("submit", (e) => {
+      const checkoutForm = e.target.closest("#checkout-form");
+      if (checkoutForm) {
         e.preventDefault();
+        e.stopPropagation();
         this.processCheckout();
-      });
-    }
+      }
+    });
   }
 
   openDrawer() {
@@ -648,30 +704,37 @@ class CartEngine {
           <div class="receipt-success-badge" style="border-color:#D4AF37;">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
-          <span class="receipt-pre-title" style="color:#D4AF37;">Royal Order Confirmed</span>
-          <h2 class="receipt-order-id">${orderNum}</h2>
-          <p class="receipt-notice">Your single-estate micro-lot has entered our nocturnal nitrogen roaster. Hand-packaged with wax seal in our Bangalore facility.</p>
+          <h2>Royal Dispatch Confirmed</h2>
+          <p class="receipt-order-id">Order Reference: <strong>${orderNum}</strong></p>
+          <div class="receipt-status-pill">● Queue Position #1 • Bangalore Roastery Scheduled for Midnight Stasis Cycle</div>
 
-          <div class="receipt-details-box">
-            <div class="receipt-detail-row"><span>Estimated Dispatch</span><strong>Within 24 Hours (Nocturnal Stasis)</strong></div>
-            <div class="receipt-detail-row"><span>Courier Partner</span><strong>Bluedart Air / Delhivery Royal Express</strong></div>
-            <div class="receipt-detail-row"><span>Total Paid</span><strong style="color:#D4AF37;">${this.formatINR(calcs.totalINR)}</strong></div>
-          </div>
-
-          <div class="receipt-items-mini-list">
+          <div class="receipt-items-breakdown">
+            <h4>Allocated Lots:</h4>
             ${orderItems.map(item => `
-              <div class="receipt-mini-item">
-                <span>${item.quantity}x ${item.name} (${item.size}, ${item.grind})</span>
-                <span>${this.formatINR(item.unitPriceINR * item.quantity)}</span>
+              <div class="receipt-item-line">
+                <span>${item.name} (${item.size}, ${item.grind}) × ${item.quantity}</span>
+                <span>${this.formatPrice(item.priceINR * item.quantity)}</span>
               </div>
             `).join("")}
+            ${this.isHeirloomGift ? `
+              <div class="receipt-item-line" style="color:#D4AF37;">
+                <span>Heirloom Velvet Presentation Chest</span>
+                <span>+₹250.00</span>
+              </div>
+            ` : ''}
+            <div class="receipt-total-line">
+              <span>Total Paid:</span>
+              <span class="text-gradient-gold">${this.formatPrice(calcs.totalINR)}</span>
+            </div>
           </div>
 
-          <div class="receipt-actions">
-            <button type="button" class="btn btn-glow-gold btn-block" id="btn-finish-receipt">
-              <span>Return to Royal Collection</span>
-            </button>
-          </div>
+          <p style="font-size:0.85rem; color:var(--text-secondary); margin:18px 0; text-align:center;">
+            An encrypted roast passport and live Bluedart tracking coordinates have been dispatched to your email.
+          </p>
+
+          <button type="button" class="btn btn-glow-gold btn-block" id="btn-finish-receipt">
+            <span>Return to Sanctuary</span>
+          </button>
         </div>
       `;
 
@@ -681,38 +744,37 @@ class CartEngine {
       if (finishBtn) {
         finishBtn.addEventListener("click", () => {
           this.closeCheckoutModal();
-          window.location.reload();
+          this.updateUI();
         });
       }
     }, 1800);
   }
 
-  showToast(message, isError = false) {
-    let container = document.getElementById("toast-container");
+  showToast(message) {
+    let container = document.getElementById("wakey-toast-container");
     if (!container) {
       container = document.createElement("div");
-      container.id = "toast-container";
+      container.id = "wakey-toast-container";
       container.className = "toast-container";
       document.body.appendChild(container);
     }
 
     const toast = document.createElement("div");
-    toast.className = `toast-pill ${isError ? "toast-error" : "toast-success"} animate-slide-up`;
+    toast.className = "luxury-toast animate-slide-up";
     toast.innerHTML = `
-      <span class="toast-dot" style="${isError ? '' : 'background:#D4AF37; box-shadow:0 0 8px #D4AF37;'}"></span>
-      <span class="toast-text">${message}</span>
+      <span class="toast-owl-dot">✦</span>
+      <span class="toast-msg">${message}</span>
     `;
 
     container.appendChild(toast);
 
     setTimeout(() => {
-      toast.style.opacity = "0";
-      toast.style.transform = "translateY(-10px)";
-      setTimeout(() => toast.remove(), 300);
-    }, 3200);
+      toast.classList.add("toast-fade-out");
+      setTimeout(() => toast.remove(), 400);
+    }, 3500);
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  window.wakeyCart = new CartEngine();
+  window.wakeyCart = new WakeyCart();
 });
