@@ -1,0 +1,203 @@
+/**
+ * Wakey Owl — Keyframe Animations & Micro-Interactions
+ */
+
+/* 1. Owl Logo Animated Eyes & Cyber Laser Scan */
+@keyframes eyeGlowLaser {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px #00F0FF) drop-shadow(0 0 10px #00F0FF);
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 8px #FF9E1B) drop-shadow(0 0 16px #FF9E1B);
+    transform: scale(1.15);
+  }
+}
+
+.logo-owl-eye {
+  animation: eyeGlowLaser 3.5s infinite ease-in-out;
+  transform-origin: center;
+}
+
+@keyframes pathDrawPulse {
+  0% {
+    stroke-dashoffset: 200;
+    opacity: 0.5;
+  }
+  50% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 200;
+    opacity: 0.5;
+  }
+}
+
+.logo-animated-stroke {
+  stroke-dasharray: 200;
+  animation: pathDrawPulse 8s infinite ease-in-out;
+}
+
+/* 2. Zero-G Anti-Gravity Float */
+@keyframes floatZeroG {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-16px) rotate(1deg);
+  }
+  100% {
+    transform: translateY(6px) rotate(-1deg);
+  }
+}
+
+@keyframes spinRing {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes spinRingReverse {
+  0% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+}
+
+/* 3. Beacon / Radar Pulse */
+@keyframes beaconPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.4);
+  }
+}
+
+@keyframes pulseScale {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+}
+
+@keyframes pulseTimer {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 158, 27, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 45px rgba(255, 158, 27, 0.6);
+  }
+}
+
+/* 4. Kinetic Typography Marquee Ticker */
+.ticker-strip {
+  width: 100%;
+  overflow: hidden;
+  background: #090C12;
+  border-top: 1px solid var(--border-glass);
+  border-bottom: 1px solid var(--border-glass);
+  padding: 16px 0;
+  display: flex;
+  white-space: nowrap;
+}
+
+.ticker-track {
+  display: flex;
+  gap: 48px;
+  animation: marqueeScroll 28s linear infinite;
+  align-items: center;
+}
+
+.ticker-item {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.ticker-dot {
+  color: var(--solar-amber);
+  font-size: 1.4rem;
+}
+
+@keyframes marqueeScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* 5. Utility Entrance Animations */
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scale-up {
+  animation: scaleUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Processing Spinner Ring */
+.processing-spinner-ring {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 158, 27, 0.2);
+  border-top-color: var(--solar-amber);
+  animation: spinRing 0.8s linear infinite;
+  margin: 0 auto 20px auto;
+}

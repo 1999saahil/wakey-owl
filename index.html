@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wakey Owl — Royal Indian Specialty Coffee & Nocturnal Roastery</title>
+  <meta name="description" content="Forged at 1,750m in the Western Ghats. Discover India's finest single-estate micro-lots, royal filter kaapi formulas, and cryogenic specialty roasts." />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+
+  <!-- Ambient Canvas Background -->
+  <canvas id="ambient-canvas"></canvas>
+
+  <div class="app-wrapper">
+
+    <!-- Sticky Glassmorphic Navbar -->
+    <header class="site-navbar" id="site-header">
+      <div class="container nav-container">
+        <!-- Brand Logo with Continuous Animated Glowing Laser Eyes -->
+        <a href="index.html" class="brand-logo-link" id="nav-brand-logo" aria-label="Wakey Owl Home">
+          <svg class="logo-owl-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="32,2 60,16 60,48 32,62 4,48 4,16" stroke="rgba(212,175,55,0.4)" stroke-width="1.5" class="logo-animated-stroke" />
+            <path d="M16 20 C24 14, 40 14, 48 20 C48 34, 40 48, 32 54 C24 48, 16 34, 16 20 Z" stroke="#D4AF37" stroke-width="2" fill="#0C0F17" />
+            <circle cx="24" cy="27" r="5" stroke="#00F0FF" stroke-width="2" fill="#060709" class="logo-owl-eye" />
+            <circle cx="24" cy="27" r="2" fill="#00F0FF" />
+            <circle cx="40" cy="27" r="5" stroke="#00F0FF" stroke-width="2" fill="#060709" class="logo-owl-eye" />
+            <circle cx="40" cy="27" r="2" fill="#00F0FF" />
+            <polygon points="32,32 29,38 35,38" fill="#FF9E1B" />
+          </svg>
+          <div class="brand-name-wrap">
+            <span class="brand-name">WAKEY OWL</span>
+            <span class="brand-tagline">Royal Indian Specialty Roastery</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav>
+          <ul class="nav-links-menu">
+            <li class="nav-link-item active"><a href="index.html">Home</a></li>
+            <li class="nav-link-item"><a href="shop.html">Collection</a></li>
+            <li class="nav-link-item"><a href="heritage.html">Our Heritage</a></li>
+            <li class="nav-link-item"><a href="about.html">About & Vision</a></li>
+            <li class="nav-link-item"><a href="curations.html">Curations</a></li>
+            <li class="nav-link-item"><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </nav>
+
+        <!-- Live Roastery Status Pill -->
+        <div class="nav-live-status">
+          <span class="live-beacon-dot"></span>
+          <span>Bangalore Roastery Live</span>
+        </div>
+
+        <!-- Navigation Actions -->
+        <div class="nav-actions-right">
+          <!-- Currency Selector (INR Default) -->
+          <select id="currency-select" class="currency-selector" aria-label="Select Currency">
+            <option value="INR" selected>INR (₹)</option>
+            <option value="USD">USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+            <option value="AED">AED (د.إ)</option>
+          </select>
+
+          <!-- Search Trigger -->
+          <button type="button" class="nav-icon-btn" data-search-trigger aria-label="Search Estates">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </button>
+
+          <!-- Soundscape Toggle -->
+          <button type="button" class="nav-icon-btn" id="sound-toggle-btn" aria-label="Toggle Sound" title="Toggle Soundscape">
+            <span id="sound-toggle-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+            </span>
+          </button>
+
+          <!-- Cart Drawer Trigger -->
+          <button type="button" class="nav-icon-btn nav-cart-btn" data-cart-open aria-label="Shopping Bag">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+            <span class="nav-cart-badge">0</span>
+          </button>
+
+          <!-- Mobile Hamburger -->
+          <button type="button" class="mobile-hamburger-btn" id="mobile-menu-btn" aria-label="Open Menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Drawer Navigation -->
+    <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+      <div class="mobile-nav-header">
+        <span class="brand-name text-gradient-gold">WAKEY OWL</span>
+        <button type="button" class="btn-modal-close" id="mobile-nav-close">✕</button>
+      </div>
+      <ul class="mobile-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">The Collection</a></li>
+        <li><a href="heritage.html">Our Heritage</a></li>
+        <li><a href="about.html">About & Vision</a></li>
+        <li><a href="curations.html">Imperial Curations</a></li>
+        <li><a href="contact.html">Contact & Salons</a></li>
+      </ul>
+      <div style="margin-top: auto; padding-top: 24px; border-top: 1px solid var(--border-glass);">
+        <button type="button" class="btn btn-glow-gold btn-block" data-cart-open>
+          <span>Open Royal Bag</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN HOMEPAGE CONTENT -->
+    <main>
+
+      <!-- 1. HERO SECTION: INTERACTIVE BEAN EMERGENCE & PACKET ANIMATION -->
+      <section class="hero-section" id="hero">
+        <div class="container">
+          <div class="hero-grid">
+            <!-- Left Hero Content -->
+            <div class="hero-content">
+              <div class="hero-eyebrow-pill animate-fade-in">
+                <span>✦</span>
+                <span>High-Altitude Western Ghats Terroirs</span>
+                <span>•</span>
+                <span class="text-gradient-cyan">SCA 94.8+</span>
+              </div>
+
+              <h1 class="hero-title animate-slide-up">
+                Royal Indian Coffee. <br />
+                <span class="text-gradient-gold">Nocturnal Precision.</span>
+              </h1>
+
+              <p class="hero-description animate-slide-up">
+                Catering to India's most discerning coffee connoisseurs. We curate micro-lot harvests from historic estates in Chikmagalur, BR Hills, and Araku Valley, roasted under nocturnal cryogenic stasis to unlock velvet body and zero bitterness.
+              </p>
+
+              <div class="hero-cta-group animate-slide-up">
+                <a href="shop.html" class="btn btn-glow-gold btn-large" id="hero-cta-order">
+                  <span>Explore Estate Roasts</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </a>
+
+                <a href="#ai-sommelier-section" class="btn btn-glass btn-large" id="hero-cta-ai">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                  <span>Consult AI Sommelier</span>
+                </a>
+              </div>
+
+              <div class="hero-stats-row">
+                <div class="hero-stat-item">
+                  <span class="hero-stat-val text-gradient-gold">1,750<small style="font-size: 1rem;">m</small></span>
+                  <span class="hero-stat-label">BR Hills Elevation</span>
+                </div>
+                <div class="hero-stat-item">
+                  <span class="hero-stat-val text-gradient-amber">1670<small style="font-size: 1rem;"> AD</small></span>
+                  <span class="hero-stat-label">Baba Budan Heritage</span>
+                </div>
+                <div class="hero-stat-item">
+                  <span class="hero-stat-val text-gradient-cyan">100%</span>
+                  <span class="hero-stat-label">Shade-Grown Canopy</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Hero 3D Roasted Bean & Packet Emergence Stage -->
+            <div class="hero-visual-col" data-hero-tilt>
+              <div class="coffee-emergence-stage">
+                <!-- Rotating Gold Ring -->
+                <div class="stage-aura-ring"></div>
+
+                <!-- Interactive Roasted Bean & Steam Particle Canvas -->
+                <canvas id="hero-coffee-canvas"></canvas>
+
+                <!-- Base Luxury Canister/Packet Graphic -->
+                <img src="assets/images/hero_canister.jpg" alt="Wakey Owl Royal Coffee Canister" class="stage-packet-img" />
+              </div>
+
+              <!-- Interactive Emergence Action Controls -->
+              <div class="stage-actions-bar">
+                <button type="button" class="btn-stage-action" id="btn-trigger-aroma">
+                  <span>✦ Trigger Aromatic Bean Dispersion</span>
+                </button>
+                <button type="button" class="btn-stage-action" id="btn-trigger-pour">
+                  <span>☕ Pour Royal Decoction</span>
+                </button>
+                <button type="button" class="btn-stage-action" id="btn-trigger-unseal">
+                  <span>✦ Unseal Canister</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. KINETIC TICKER MARQUEE -->
+      <div class="ticker-strip" aria-hidden="true">
+        <div class="ticker-track">
+          <span class="ticker-item">1,750M ATTIKAN ESTATE <span class="ticker-dot">✦</span></span>
+          <span class="ticker-item">BABABUDANGIRI ANCIENT CRADLE <span class="ticker-dot">✦</span></span>
+          <span class="ticker-item">ROYAL MYSORE FILTER FORMULA <span class="ticker-dot">✦</span></span>
+          <span class="ticker-item">ARAKU BIODYNAMIC MICRO-LOTS <span class="ticker-dot">✦</span></span>
+          <span class="ticker-item">ZERO ASTRINGENCY GUARANTEED <span class="ticker-dot">✦</span></span>
+          <span class="ticker-item">CRYOGENIC NOCTURNAL ROAST <span class="ticker-dot">✦</span></span>
+          <!-- Continuous loop -->
+          <span class="ticker-item">1,750M ATTIKAN ESTATE <span class="ticker-dot">✦</span></span>
+          <span class="ticker-item">BABABUDANGIRI ANCIENT CRADLE <span class="ticker-dot">✦</span></span>
+          <span class="ticker-item">ROYAL MYSORE FILTER FORMULA <span class="ticker-dot">✦</span></span>
+          <span class="ticker-item">ARAKU BIODYNAMIC MICRO-LOTS <span class="ticker-dot">✦</span></span>
+          <span class="ticker-item">ZERO ASTRINGENCY GUARANTEED <span class="ticker-dot">✦</span></span>
+          <span class="ticker-item">CRYOGENIC NOCTURNAL ROAST <span class="ticker-dot">✦</span></span>
+        </div>
+      </div>
+
+      <!-- 3. SENSORY MATRIX 4-PILLAR BAR -->
+      <section class="sensory-matrix-bar">
+        <div class="container">
+          <div class="matrix-grid">
+            <div class="matrix-card">
+              <div class="matrix-icon-box">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              </div>
+              <div class="matrix-text">
+                <h4>Western Ghats Terroirs</h4>
+                <p>100% shade-grown under cardamom, silver oak, and wild pepper vines in UNESCO biosphere.</p>
+              </div>
+            </div>
+
+            <div class="matrix-card">
+              <div class="matrix-icon-box">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14"/></svg>
+              </div>
+              <div class="matrix-text">
+                <h4>Oceanic Monsoon Stasis</h4>
+                <p>Natural Arabian Sea winds strip harsh acids, creating the world's thickest velvet crema.</p>
+              </div>
+            </div>
+
+            <div class="matrix-card">
+              <div class="matrix-icon-box">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </div>
+              <div class="matrix-text">
+                <h4>SCA 94+ Cupping Benchmark</h4>
+                <p>Blind spectrometry evaluated by Q-Graders to guarantee peak sugar caramelization.</p>
+              </div>
+            </div>
+
+            <div class="matrix-card">
+              <div class="matrix-icon-box">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+              </div>
+              <div class="matrix-text">
+                <h4>Bangalore Roastery Dispatch</h4>
+                <p>Roasted fresh to order and dispatched via priority air express across India within 24 hours.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. FEATURED SIGNATURE INDIAN ESTATE ALLOCATIONS -->
+      <section class="section-py" id="featured-roasts">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-eyebrow">The Royal Portfolio</span>
+            <h2 class="section-title">Single-Estate <span class="text-gradient-gold">Masterpieces</span></h2>
+            <p class="section-description">
+              Carefully curated for India's connoisseurs. Single-estate lots with authentic traceability, distinct flavor notes, and gourmet pairings.
+            </p>
+          </div>
+
+          <!-- Product Grid Injected by JS -->
+          <div class="products-grid" id="featured-roasts-grid">
+            <!-- Populated by js/app.js -->
+          </div>
+
+          <div style="text-align: center; margin-top: 48px;">
+            <a href="shop.html" class="btn btn-glass btn-large">
+              <span>View Full Indian & Global Collection</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. AI COFFEE SOMMELIER & ENCYCLOPEDIA ASSISTANT -->
+      <section class="section-py" id="ai-sommelier-section" style="background: radial-gradient(circle at 50% 50%, rgba(20, 25, 38, 0.8) 0%, rgba(8, 10, 15, 0.95) 100%); border-top: 1px solid var(--border-glass); border-bottom: 1px solid var(--border-glass);">
+        <div class="container">
+          <div id="ai-coffee-chatbox">
+            <!-- Rendered by js/ai-assistant.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. THE HERITAGE TEASER: 1670 BABA BUDAN STORY -->
+      <section class="section-py" id="heritage-teaser">
+        <div class="container">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 54px; align-items: center;">
+            <div data-tilt>
+              <img src="assets/images/roastery_lab.jpg" alt="Indian High-Altitude Coffee Canopy" style="width: 100%; border-radius: 24px; border: 1px solid rgba(212,175,55,0.3); box-shadow: var(--shadow-md);" />
+            </div>
+            <div>
+              <span class="section-eyebrow">The 400-Year Legacy</span>
+              <h2 style="font-size: 2.3rem; margin-bottom: 18px;">Seven Sacred Beans & <br /><span class="text-gradient-gold">The Western Ghats</span></h2>
+              <p style="margin-bottom: 20px; line-height: 1.7;">
+                In 1670 AD, the revered Sufi saint Baba Budan smuggled seven raw coffee beans from the port of Mocha in Yemen and planted them upon the Chandragiri Hills of Chikmagalur.
+              </p>
+              <p style="margin-bottom: 30px; line-height: 1.7;">
+                Today, Wakey Owl honors this sacred origin by partnering with 5th-generation heritage planters across Karnataka, Tamil Nadu, and Andhra Pradesh, elevating Indian coffee to the global haute couture luxury stage.
+              </p>
+              <a href="heritage.html" class="btn btn-glow-gold">
+                <span>Explore Our Heritage & Terroirs</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. CONNOISSEUR REVIEWS -->
+      <section class="section-py" style="background: rgba(8, 11, 17, 0.6); border-top: 1px solid var(--border-glass);">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-eyebrow">Connoisseur Acclaim</span>
+            <h2 class="section-title">The Royal <span class="text-gradient-gold">Experience</span></h2>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+            <div class="glass-panel" style="padding: 32px;">
+              <div style="color: var(--cyber-gold); font-size: 1.1rem; margin-bottom: 12px;">★★★★★</div>
+              <p style="font-style: italic; margin-bottom: 20px; font-size: 1.02rem;">
+                "The Ratnagiri Anaerobic Natural is an astonishing revelation. The Alphonso mango notes and floral honey clarity rival the world's most expensive Panama Geishas. Wakey Owl has created true Indian luxury."
+              </p>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 42px; height: 42px; border-radius: 50%; background: #1A2030; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #D4AF37;">VK</div>
+                <div>
+                  <h4 style="font-size: 0.95rem;">Vikramaditya Kirloskar</h4>
+                  <span style="font-size: 0.78rem; color: var(--biolum-cyan);">Art Collector & Connoisseur, Bengaluru</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-panel" style="padding: 32px;">
+              <div style="color: var(--cyber-gold); font-size: 1.1rem; margin-bottom: 12px;">★★★★★</div>
+              <p style="font-style: italic; margin-bottom: 20px; font-size: 1.02rem;">
+                "The Mysore Imperial Filter Blend brewed in their Hand-Hammered Brass Davarah is the definitive morning ritual in our residence. Heavy dark chocolate, rich chicory balance, zero harshness."
+              </p>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 42px; height: 42px; border-radius: 50%; background: #1A2030; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #D4AF37;">RN</div>
+                <div>
+                  <h4 style="font-size: 0.95rem;">Radhika Singhania</h4>
+                  <span style="font-size: 0.78rem; color: var(--solar-amber);">Luxury Hospitality Director, Mumbai</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-panel" style="padding: 32px;">
+              <div style="color: var(--cyber-gold); font-size: 1.1rem; margin-bottom: 12px;">★★★★★</div>
+              <p style="font-style: italic; margin-bottom: 20px; font-size: 1.02rem;">
+                "Attikan Estate Reserve paired with warm Mysore Pak is sheer perfection. The AI Sommelier answered all my queries about brass extraction ratios with pinpoint accuracy."
+              </p>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 42px; height: 42px; border-radius: 50%; background: #1A2030; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #D4AF37;">AR</div>
+                <div>
+                  <h4 style="font-size: 0.95rem;">Ananya Roy Chowdhury</h4>
+                  <span style="font-size: 0.78rem; color: var(--cyber-gold);">Sommelier & Food Critic, New Delhi</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. VIP ROYAL SOCIETY PRIVILEGE CLUB -->
+      <section class="section-py">
+        <div class="container">
+          <div class="glass-panel" style="padding: 56px 48px; text-align: center; max-width: 840px; margin: 0 auto; border-color: rgba(212,175,55,0.4); box-shadow: 0 0 35px rgba(212,175,55,0.15);">
+            <span class="section-eyebrow">The Royal Society</span>
+            <h2 style="font-size: 2.2rem; margin-bottom: 14px;">Enter The <span class="text-gradient-gold">Inner Sanctuary</span></h2>
+            <p style="margin-bottom: 28px; max-width: 580px; margin-left: auto; margin-right: auto;">
+              Receive priority allocations of 100-canister micro-lot harvests, private invitations to Bangalore & Mumbai tasting salons, and an immediate 15% Royal Privilege code.
+            </p>
+
+            <form id="newsletter-form" style="display: flex; gap: 12px; max-width: 520px; margin: 0 auto;">
+              <input type="email" class="input-field" placeholder="Enter private email address..." required />
+              <button type="submit" class="btn btn-glow-gold" style="white-space: nowrap;">
+                <span>Claim Privilege Key</span>
+              </button>
+            </form>
+            <div id="newsletter-msg" style="margin-top: 16px; font-size: 0.9rem;"></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- LUXURY FOOTER -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-top-grid">
+          <div class="footer-brand-col">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <svg class="logo-owl-svg" viewBox="0 0 64 64" fill="none" style="width: 36px; height: 36px;">
+                <polygon points="32,2 60,16 60,48 32,62 4,48 4,16" stroke="rgba(212,175,55,0.5)" stroke-width="2"/>
+                <path d="M16 20 C24 14, 40 14, 48 20 C48 34, 40 48, 32 54 C24 48, 16 34, 16 20 Z" stroke="#D4AF37" stroke-width="2" fill="#0C0F17" />
+                <circle cx="24" cy="27" r="4" fill="#00F0FF" />
+                <circle cx="40" cy="27" r="4" fill="#00F0FF" />
+              </svg>
+              <span class="brand-name">WAKEY OWL</span>
+            </div>
+            <p>
+              Royal Indian specialty coffee forged across high-elevation Western Ghats terroirs and roasted under nocturnal cryogenic stasis.
+            </p>
+          </div>
+
+          <div>
+            <h4 class="footer-col-title">Navigation</h4>
+            <ul class="footer-links-list">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="shop.html">The Collection</a></li>
+              <li><a href="heritage.html">Our Heritage</a></li>
+              <li><a href="about.html">About & Vision</a></li>
+              <li><a href="curations.html">Imperial Curations</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="footer-col-title">Estate Terroirs</h4>
+            <ul class="footer-links-list">
+              <li><a href="heritage.html">Attikan Estate 1,750m</a></li>
+              <li><a href="heritage.html">Ratnagiri Pearl Mountain</a></li>
+              <li><a href="heritage.html">Araku Valley Biodynamic</a></li>
+              <li><a href="heritage.html">Monsooned Malabar Stasis</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-newsletter-box">
+            <h4 class="footer-col-title">Roastery Dispatch</h4>
+            <p>Daily nocturnal roasting cycles at our Bangalore facility. Orders dispatched within 24h of roast.</p>
+            <div style="font-size: 0.85rem; color: var(--cyber-gold); font-weight: 600;">
+              ● Pan-India Bluedart Express & Global Air Courier Active
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom-bar">
+          <div>© 2026 Wakey Owl Luxury Roastery India Pvt. Ltd. All Rights Reserved.</div>
+          <div class="footer-badges">
+            <span>Specialty Coffee Association India</span> • 
+            <span>100% Shade-Grown Western Ghats</span> • 
+            <span>Cryogenic Stasis Sealed</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/products.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/coffee-animation.js"></script>
+  <script src="js/tilt.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/ai-assistant.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wakey Owl — About Us | Vision, Mission & Nocturnal Alchemy</title>
+  <meta name="description" content="Our vision of putting Indian high-elevation specialty coffee on the global haute couture luxury stage. Direct-trade planter sovereignty and nocturnal cryogenic roasting." />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+
+  <!-- Ambient Canvas -->
+  <canvas id="ambient-canvas"></canvas>
+
+  <div class="app-wrapper">
+
+    <!-- Sticky Glassmorphic Navbar -->
+    <header class="site-navbar" id="site-header">
+      <div class="container nav-container">
+        <a href="index.html" class="brand-logo-link" id="nav-brand-logo" aria-label="Wakey Owl Home">
+          <svg class="logo-owl-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="32,2 60,16 60,48 32,62 4,48 4,16" stroke="rgba(212,175,55,0.4)" stroke-width="1.5" class="logo-animated-stroke" />
+            <path d="M16 20 C24 14, 40 14, 48 20 C48 34, 40 48, 32 54 C24 48, 16 34, 16 20 Z" stroke="#D4AF37" stroke-width="2" fill="#0C0F17" />
+            <circle cx="24" cy="27" r="5" stroke="#00F0FF" stroke-width="2" fill="#060709" class="logo-owl-eye" />
+            <circle cx="24" cy="27" r="2" fill="#00F0FF" />
+            <circle cx="40" cy="27" r="5" stroke="#00F0FF" stroke-width="2" fill="#060709" class="logo-owl-eye" />
+            <circle cx="40" cy="27" r="2" fill="#00F0FF" />
+            <polygon points="32,32 29,38 35,38" fill="#FF9E1B" />
+          </svg>
+          <div class="brand-name-wrap">
+            <span class="brand-name">WAKEY OWL</span>
+            <span class="brand-tagline">Royal Indian Specialty Roastery</span>
+          </div>
+        </a>
+
+        <nav>
+          <ul class="nav-links-menu">
+            <li class="nav-link-item"><a href="index.html">Home</a></li>
+            <li class="nav-link-item"><a href="shop.html">Collection</a></li>
+            <li class="nav-link-item"><a href="heritage.html">Our Heritage</a></li>
+            <li class="nav-link-item active"><a href="about.html">About & Vision</a></li>
+            <li class="nav-link-item"><a href="curations.html">Curations</a></li>
+            <li class="nav-link-item"><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-live-status">
+          <span class="live-beacon-dot"></span>
+          <span>Bangalore Roastery Live</span>
+        </div>
+
+        <div class="nav-actions-right">
+          <select id="currency-select" class="currency-selector" aria-label="Select Currency">
+            <option value="INR" selected>INR (₹)</option>
+            <option value="USD">USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+            <option value="AED">AED (د.إ)</option>
+          </select>
+
+          <button type="button" class="nav-icon-btn" data-search-trigger aria-label="Search Estates">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </button>
+
+          <button type="button" class="nav-icon-btn" id="sound-toggle-btn" aria-label="Toggle Sound" title="Toggle Soundscape">
+            <span id="sound-toggle-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+            </span>
+          </button>
+
+          <button type="button" class="nav-icon-btn nav-cart-btn" data-cart-open aria-label="Shopping Bag">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+            <span class="nav-cart-badge">0</span>
+          </button>
+
+          <button type="button" class="mobile-hamburger-btn" id="mobile-menu-btn" aria-label="Open Menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Drawer Navigation -->
+    <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+      <div class="mobile-nav-header">
+        <span class="brand-name text-gradient-gold">WAKEY OWL</span>
+        <button type="button" class="btn-modal-close" id="mobile-nav-close">✕</button>
+      </div>
+      <ul class="mobile-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">The Collection</a></li>
+        <li><a href="heritage.html">Our Heritage</a></li>
+        <li><a href="about.html">About & Vision</a></li>
+        <li><a href="curations.html">Imperial Curations</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+      </ul>
+      <div style="margin-top: auto; padding-top: 24px; border-top: 1px solid var(--border-glass);">
+        <button type="button" class="btn btn-glow-gold btn-block" data-cart-open>
+          <span>Open Royal Bag</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN ABOUT US & VISION CONTENT -->
+    <main style="padding-top: calc(var(--nav-height) + 40px); padding-bottom: 100px;">
+      <div class="container">
+
+        <!-- Page Header -->
+        <div class="section-header">
+          <span class="section-eyebrow">Our Ethos & Manifesto</span>
+          <h1 style="font-size: clamp(2.4rem, 5vw, 4rem); margin-bottom: 16px;">
+            About Wakey Owl: <br /><span class="text-gradient-gold">Vision & Mission</span>
+          </h1>
+          <p class="section-description">
+            We are on a relentless pursuit to elevate Indian specialty coffee to the highest echelons of global luxury, uniting ancestral terroir wisdom with futuristic cryogenic roasting science.
+          </p>
+        </div>
+
+        <!-- Vision & Mission Dual Cards -->
+        <div class="mission-grid">
+          
+          <div class="mission-card">
+            <div style="font-size: 2rem; color: var(--cyber-gold); margin-bottom: 12px;">✦</div>
+            <h3>Our Grand Vision</h3>
+            <p style="font-size: 1.05rem; line-height: 1.7; color: var(--text-secondary); margin-bottom: 16px;">
+              To establish Indian high-elevation, shade-grown Arabica as the definitive benchmark for luxury coffee globally—demanding the same reverence, pedigree, and collectible status as Grand Cru Burgundy wines and rare single-malt whiskies.
+            </p>
+            <p style="font-size: 0.92rem; line-height: 1.6; color: var(--text-muted);">
+              For centuries, the finest Indian micro-lots were exported quietly to luxury salons in Milan, Tokyo, and Paris. Wakey Owl ensures that India's elite patrons experience the undisputed finest harvest first.
+            </p>
+          </div>
+
+          <div class="mission-card">
+            <div style="font-size: 2rem; color: var(--solar-amber); margin-bottom: 12px;">⚖</div>
+            <h3>Our Sacred Mission</h3>
+            <p style="font-size: 1.05rem; line-height: 1.7; color: var(--text-secondary); margin-bottom: 16px;">
+              To engineer an uncompromising luxury coffee experience by guaranteeing zero bitterness through precision cryogenic roasting, while paying 300% over market prices directly to our partner planters in the Western Ghats.
+            </p>
+            <p style="font-size: 0.92rem; line-height: 1.6; color: var(--text-muted);">
+              Every bean is harvested by hand at peak brix sugar levels, roasted only between 00:00 and 05:00 UTC under stable nocturnal atmospheric pressure, and sealed in nitrogen stasis.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- 4 Pillars of Wakey Owl -->
+        <div style="margin-top: 80px;">
+          <div class="section-header" style="margin-bottom: 40px;">
+            <span class="section-eyebrow">The 4 Pillars of Excellence</span>
+            <h2 style="font-size: 2.2rem;">Our Operational Philosophy</h2>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px;">
+            
+            <div class="glass-panel" style="padding: 32px;">
+              <h4 style="color: var(--cyber-gold); font-size: 1.2rem; margin-bottom: 10px;">1. Planter Sovereignty</h4>
+              <p style="font-size: 0.88rem; line-height: 1.6; color: var(--text-secondary);">
+                We operate through multi-year direct agreements with 5th generation estate families in Chikmagalur and BR Hills, funding advanced anaerobic fermentation tanks and raised drying beds.
+              </p>
+            </div>
+
+            <div class="glass-panel" style="padding: 32px;">
+              <h4 style="color: var(--solar-amber); font-size: 1.2rem; margin-bottom: 10px;">2. Nocturnal Science</h4>
+              <p style="font-size: 0.88rem; line-height: 1.6; color: var(--text-secondary);">
+                At midnight, atmospheric barometric pressure stabilizes. Our Bangalore roastery operates in nocturnal shifts to ensure 0.00% thermal drift during caramelization.
+              </p>
+            </div>
+
+            <div class="glass-panel" style="padding: 32px;">
+              <h4 style="color: var(--biolum-cyan); font-size: 1.2rem; margin-bottom: 10px;">3. 100% Shade Canopy</h4>
+              <p style="font-size: 0.88rem; line-height: 1.6; color: var(--text-secondary);">
+                We exclusively source from estates maintaining biodiverse bird-friendly shade canopies in the UNESCO Western Ghats, ensuring zero clear-cut deforestation.
+              </p>
+            </div>
+
+            <div class="glass-panel" style="padding: 32px;">
+              <h4 style="color: #FF3366; font-size: 1.2rem; margin-bottom: 10px;">4. Connoisseur Guarantee</h4>
+              <p style="font-size: 0.88rem; line-height: 1.6; color: var(--text-secondary);">
+                If any roast does not awaken your sensory palate with complete harmony and zero harsh astringency, our master sommelier will personally replace your allocation.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Bangalore Sensory Lab & Roastery Callout -->
+        <div class="glass-panel" style="margin-top: 80px; padding: 48px; border-color: rgba(212,175,55,0.4); text-align: center;">
+          <span class="section-eyebrow">The Nocturnal Roastery Lab</span>
+          <h2 style="font-size: 2.2rem; margin-bottom: 16px;">Headquartered in <span class="text-gradient-gold">Bengaluru, India</span></h2>
+          <p style="max-width: 680px; margin: 0 auto 28px auto; font-size: 1.05rem; color: var(--text-secondary);">
+            Our central laboratory combines Giesen fluid-bed roasting technology, cryogenic liquid nitrogen stasis tanks, and precision spectrometry cupping facilities.
+          </p>
+          <a href="contact.html" class="btn btn-glow-gold">
+            <span>Book a Private Tasting Salon</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </a>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-top-grid">
+          <div class="footer-brand-col">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <svg class="logo-owl-svg" viewBox="0 0 64 64" fill="none" style="width: 36px; height: 36px;">
+                <polygon points="32,2 60,16 60,48 32,62 4,48 4,16" stroke="rgba(212,175,55,0.5)" stroke-width="2"/>
+                <path d="M16 20 C24 14, 40 14, 48 20 C48 34, 40 48, 32 54 C24 48, 16 34, 16 20 Z" stroke="#D4AF37" stroke-width="2" fill="#0C0F17" />
+                <circle cx="24" cy="27" r="4" fill="#00F0FF" />
+                <circle cx="40" cy="27" r="4" fill="#00F0FF" />
+              </svg>
+              <span class="brand-name">WAKEY OWL</span>
+            </div>
+            <p>
+              Royal Indian specialty coffee forged across high-elevation Western Ghats terroirs and roasted under nocturnal cryogenic stasis.
+            </p>
+          </div>
+
+          <div>
+            <h4 class="footer-col-title">Navigation</h4>
+            <ul class="footer-links-list">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="shop.html">The Collection</a></li>
+              <li><a href="heritage.html">Our Heritage</a></li>
+              <li><a href="about.html">About & Vision</a></li>
+              <li><a href="curations.html">Imperial Curations</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="footer-col-title">Estate Terroirs</h4>
+            <ul class="footer-links-list">
+              <li><a href="heritage.html">Attikan Estate 1,750m</a></li>
+              <li><a href="heritage.html">Ratnagiri Pearl Mountain</a></li>
+              <li><a href="heritage.html">Araku Valley Biodynamic</a></li>
+              <li><a href="heritage.html">Monsooned Malabar Stasis</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-newsletter-box">
+            <h4 class="footer-col-title">Roastery Dispatch</h4>
+            <p>Daily nocturnal roasting cycles at our Bangalore facility. Orders dispatched within 24h of roast.</p>
+            <div style="font-size: 0.85rem; color: var(--cyber-gold); font-weight: 600;">
+              ● Pan-India Bluedart Express & Global Air Courier Active
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom-bar">
+          <div>© 2026 Wakey Owl Luxury Roastery India Pvt. Ltd. All Rights Reserved.</div>
+          <div class="footer-badges">
+            <span>Specialty Coffee Association India</span> • 
+            <span>100% Shade-Grown Western Ghats</span> • 
+            <span>Cryogenic Stasis Sealed</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/products.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/tilt.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/ai-assistant.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
